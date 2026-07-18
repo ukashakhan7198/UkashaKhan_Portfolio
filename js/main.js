@@ -423,6 +423,7 @@ function initContactForm() {
     if (!name || !email || !subject || !message) {
       feedback.textContent = 'Please fill out all fields before sending.';
       feedback.classList.add('error');
+      feedback.style.display = 'block';
       return;
     }
 
@@ -431,21 +432,27 @@ function initContactForm() {
     if (!emailPattern.test(email)) {
       feedback.textContent = 'Please provide a valid email address.';
       feedback.classList.add('error');
+      feedback.style.display = 'block';
       return;
     }
 
-    // Mock successful submit
+    // Send via user's mail client with prefilled content
     const submitBtn = form.querySelector('button[type="submit"]');
     const originalText = submitBtn.textContent;
-    submitBtn.textContent = 'Sending Message...';
+    submitBtn.textContent = 'Preparing Email...';
     submitBtn.disabled = true;
+
+    const mailSubject = encodeURIComponent(`[Portfolio Contact] ${subject}`);
+    const mailBody = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
+    window.location.href = `mailto:ukashakhan7198@gmail.com?subject=${mailSubject}&body=${mailBody}`;
 
     setTimeout(() => {
       submitBtn.textContent = originalText;
       submitBtn.disabled = false;
-      feedback.textContent = 'Thank you, Ukasha! Your message has been sent successfully. I will get back to you shortly.';
+      feedback.textContent = 'Your email client should open now. Please send the message to complete the request.';
       feedback.classList.add('success');
+      feedback.style.display = 'block';
       form.reset();
-    }, 1500);
+    }, 500);
   });
 }
